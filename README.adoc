@@ -1,0 +1,61 @@
+= [Demo] Privacy Information Processing System
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+:sectnums:
+:experimental: true
+
+= Overview
+
+Demo application for privacy information processing system.
+
+== About up the project
+
+- [x] Multi module project
+- [x] Java 17
+- [x] Spring boot 3.2.x
+- [x] Spring data jpa and querydsl
+- [x] AOP logging and features
+- [x] Exception handling
+- [x] Test fixtures
+- [ ] Spring cache and scheduling
+- [ ] Spring security
+- [ ] Jwt token
+
+== Modules
+
+[source,text]
+----
+.
+├── clients : External API Clients
+├── core : Common utils
+├── modules : Internal Modules
+│    └── http-module : HTTP Client Module
+│    └── socket-module : Socket Client Module
+├── core-web : Common web app utils
+├── secure-app-service : Common secure service module
+├── pips-data : Privacy system data module
+├── pips-domain : Privacy system domain module
+├── pips-app : Privacy system application module
+├── pips-app-service : Privacy system service module
+└── pips-test-support : Privacy system test support module
+----
+
+== Build
+
+.Build the application
+[source,console]
+----
+$ ./gradlew clean build
+----
+
+== Run
+
+.Run the application
+[source,console]
+----
+$ ./gradlew :privacy-app:bootRun -Dspring.profiles.active=local
+----

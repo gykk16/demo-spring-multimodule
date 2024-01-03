@@ -1,0 +1,19 @@
+bootJar { enabled = false }
+jar { enabled = true }
+
+dependencies {
+
+    // spring
+    implementation 'org.springframework.boot:spring-boot-starter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    api 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.retry:spring-retry'
+
+    // h2
+    runtimeOnly 'com.h2database:h2'
+
+    // querydsl
+    api 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+
+}

@@ -1,0 +1,122 @@
+package io.glory.mcore.util.bytes;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+class ByteUtilTest {
+
+    private static final String EUC_KR = "EUC-KR";
+
+    @DisplayName("ByteBuffer 에서 EUC-KR 문자열을 읽어 온다")
+    @Test
+    void readBytesEUCKR() throws Exception {
+        // given
+        String testString = "테스트";
+        byte[] eucKrBytes = testString.getBytes(EUC_KR);
+        ByteBuffer buffer = ByteBuffer.wrap(eucKrBytes);
+
+        // when
+        String result = ByteUtil.readBytesEUCKR(buffer, eucKrBytes.length);
+
+        // then
+        assertThat(result).isEqualTo(testString);
+    }
+
+    @DisplayName("byte 를 신규 문자열로 변환 한다")
+    @Test
+    void toNewStringEUCKR() throws Exception {
+        // given
+        String testString = "테스트";
+        byte[] eucKrBytes = testString.getBytes(EUC_KR);
+
+        // when
+        String result = ByteUtil.toNewStringEUCKR(eucKrBytes);
+
+        // then
+        assertThat(result).isEqualTo(testString).isNotSameAs(testString);
+    }
+
+    @DisplayName("문자열을 ByteBuffer 로 변환 한다")
+    @Test
+    void toByteBufferEUCKR() throws Exception {
+        // given
+        String testString = "테스트";
+        byte[] bytes = testString.getBytes(EUC_KR);
+
+        // when
+        ByteBuffer buffer = ByteUtil.toByteBufferEUCKR(testString);
+
+        // then
+        assertThat(buffer.array()).isEqualTo(bytes);
+    }
+
+    @DisplayName("문자열을 byte array 로 변환 한다")
+    @Test
+    void toBytesEUCKR() throws Exception {
+        // given
+        String testString = "테스트";
+        int length = 10;
+        byte[] expected = {-59, -41, -67, -70, -58, -82, 32, 32, 32, 32};
+
+        // when
+        byte[] result = ByteUtil.toBytesEUCKR(testString, length);
+
+        // then
+        assertThat(result).hasSize(length).isEqualTo(expected);
+    }
+
+    @DisplayName("byte array 를 합친다")
+    @Test
+    void concat() throws Exception {
+        // given
+        byte[] bytes1 = {1, 2, 3};
+        byte[] bytes2 = {4, 5, 6};
+        byte[] bytes3 = {7, 8, 9};
+
+        byte[] expected = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+        // when
+        byte[] result = ByteUtil.concat(bytes1, bytes2, bytes3);
+
+        // then
+        assertThat(result).hasSize(9).isEqualTo(expected);
+    }
+
+    @DisplayName("좌측 패딩을 한 byte array 를 반환 한다")
+    @Test
+    void when_toBytesWithLeftPadding_expect_LeftPadding() throws Exception {
+        // given
+        String text = "123";
+        int length = 10;
+        char paddingChar = '0';
+
+        // when`
+        byte[] bytes = ByteUtil.toBytes(text, StandardCharsets.UTF_8.name(), length, paddingChar, true);
+        String newText = new String(bytes, StandardCharsets.UTF_8);
+
+        // then
+        assertThat(newText).isEqualTo("0000000123");
+    }
+
+    @DisplayName("우측 패딩을 한 byte array 를 반환 한다")
+    @Test
+    void when_toBytesWithRightPadding_expect_RightPadding() throws Exception {
+        // given
+        String text = "123";
+        int length = 10;
+        char paddingChar = '0';
+
+        // when`
+        byte[] bytes = ByteUtil.toBytes(text, StandardCharsets.UTF_8.name(), length, paddingChar, false);
+        String newText = new String(bytes, StandardCharsets.UTF_8);
+
+        // then
+        assertThat(newText).isEqualTo("1230000000");
+    }
+
+}

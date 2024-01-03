@@ -1,0 +1,48 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  #  datasource:
+  #    url:
+  #    username:
+  #    password:
+  #    driver-class-name:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 500
+        order_updates: true
+        order_inserts: true
+        jdbc:
+          batch_size: 500
+        query:
+          mutation_strategy: org.hibernate.query.sqm.mutation.internal.inline.InlineMutationStrategy
+    open-in-view: false
+    generate-ddl: false
+
+# =====================================================================================================================
+# logging
+# =====================================================================================================================
+logging:
+  group:
+    app: "io.glory"
+    hikari: "com.zaxxer.hikari"
+    transaction: "org.springframework.transaction, org.springframework.orm.jpa.JpaTransactionManager, org.hibernate.engine.transaction.internal.TransactionImpl"
+    query: "org.hibernate.SQL, org.hibernate.SQL_SLOW"
+    bind: "org.hibernate.orm.jdbc.bind"
+  level:
+    app: debug
+    sql: debug
+    query: debug
+    bind: trace
+
+---
+
+
+
+

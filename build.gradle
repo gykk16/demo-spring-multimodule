@@ -1,0 +1,120 @@
+import java.nio.charset.StandardCharsets
+
+buildscript {
+    ext {
+        springBootVersion = '3.2.1'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "io.spring.gradle:dependency-management-plugin:1.1.4"
+    }
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+
+    /*
+    java-library: api 와 implementation 분리 사용하기 위함
+    https://docs.gradle.org/current/userguide/java_library_plugin.html
+     */
+    apply plugin: 'java-library'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+    compileJava.options.encoding = StandardCharsets.UTF_8.name()
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    dependencies {
+
+        annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+        // lombok
+        implementation 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        testImplementation 'org.projectlombok:lombok'
+        testAnnotationProcessor 'org.projectlombok:lombok'
+
+        // querydsl
+        annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+        annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+        annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+
+//        runtimeOnly("io.netty:netty-resolver-dns-native-macos:4.1.76.Final:osx-aarch_64")
+
+    }
+
+    // build 시 테스트 제외
+    /*
+    tasks.withType(Test).tap {
+        configureEach {
+            onlyIf { !gradle.startParameter.taskNames.contains('build') }
+        }
+    }
+     */
+
+    def querydslSrcDir = 'src/main/generated'
+    clean {
+        delete file(querydslSrcDir)
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.generatedSourceOutputDirectory = file(querydslSrcDir)
+    }
+
+    // getParameterNames() 사용을 위한 설정
+    tasks.withType(JavaCompile).configureEach {
+        options.compilerArgs.add("-parameters")
+    }
+
+}
+
+project(':pips-app') {
+    dependencies {
+        implementation project(':pips-app-service')
+        implementation project(':core-web')
+    }
+}
+
+project(':pips-app-service') {
+    dependencies {
+        api project(':pips-domain')
+    }
+}
+
+project(':pips-domain') {
+    dependencies {
+        api project(':pips-data')
+    }
+}
+
+// 모든 모듈에 core 모듈 추가
+configure(subprojects.findAll() { it.name != 'core' }) {
+    dependencies {
+        implementation project(':core')
+        testImplementation(testFixtures(project(':pips-test-support')))
+    }
+}
+
+// 빌드시 domain 모듈 테스트 제외: db 연결 없이 빌드
+configure(subprojects.findAll() { it.name.contains('domain') }) {
+    tasks.withType(Test).tap {
+        configureEach {
+            onlyIf { !gradle.startParameter.taskNames.contains('build') }
+        }
+    }
+}

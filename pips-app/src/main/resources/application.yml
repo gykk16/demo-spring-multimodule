@@ -1,0 +1,71 @@
+spring:
+  main:
+    banner-mode: log
+
+  profiles:
+    default: local
+    group:
+      local: local
+      dev: deploy, dev
+      prod: deploy, prod
+
+  output:
+    ansi:
+      enabled: always
+
+# =====================================================================================================================
+# Application Info
+# =====================================================================================================================
+# properties 방식으로 해야 build.gradle 파일에서 읽을 수 있다.
+info.app.version: 0.0.1
+info:
+  app:
+    name: Privacy Information Processing System
+    name-kor: 개인정보 처리 시스템
+    group: io.glory.privacy
+    alias: pips-app
+
+# =====================================================================================================================
+# application
+# =====================================================================================================================
+webapp:
+  worker-id: 1
+  process-id: 1
+
+# =====================================================================================================================
+# server
+# =====================================================================================================================
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+  shutdown: graceful
+  error:
+    include-binding-errors: never
+    include-message: never
+    include-stacktrace: never
+    include-exception: false
+
+# =====================================================================================================================
+# logging
+# =====================================================================================================================
+logging:
+  group:
+    app: "io.glory"
+    hikari: "com.zaxxer.hikari"
+    transaction: "org.springframework.transaction, org.springframework.orm.jpa.JpaTransactionManager, org.hibernate.engine.transaction.internal.TransactionImpl"
+    query: "org.hibernate.SQL, org.hibernate.SQL_SLOW"
+    bind: "org.hibernate.orm.jdbc.bind"
+  level:
+    app: debug
+    sql: debug
+    query: debug
+    bind: trace
+
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %clr(%5.5p) [%15.15t] [%clr(%-36.36X{REQ_TRACE_KEY}){magenta}] --- %clr(%-40.40logger{39}){cyan} : %m%n%throwable"
+
+  charset:
+    file: UTF-8
+    console: UTF-8

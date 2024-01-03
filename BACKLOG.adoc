@@ -1,0 +1,11 @@
+= TODOs
+
+- [ ] Spring cache and scheduling
+- [ ] Spring security
+- [ ] Jwt token
+- [ ] 정보 수정 기능
+- [ ] 사용자 기능 추가
+- [ ] 사용자 인증 기능 추가
+- [ ] 사용자는 자신의 정보만 조회, 수정 가능
+- [ ] 데이터를 종류별로 분류하여 조회 기능
+- [ ] 데이터 암호화 기능

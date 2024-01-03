@@ -1,0 +1,16 @@
+plugins {
+    id 'java-test-fixtures'
+}
+
+bootJar { enabled = false }
+jar { enabled = true }
+
+dependencies {
+
+    // spring
+    testFixturesCompileOnly('org.springframework.boot:spring-boot-starter-web')
+    testFixturesCompileOnly('org.springframework.boot:spring-boot-starter-test')
+
+    testFixturesCompileOnly('org.springframework.restdocs:spring-restdocs-mockmvc')
+
+}

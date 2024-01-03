@@ -1,0 +1,31 @@
+rootProject.name = 'pips'
+
+/* 코어 모듈 */
+include 'core'
+
+/* 웹 공통 모듈 */
+include 'core-web'
+
+/* 도메인 */
+include 'pips-data'
+include 'pips-domain'
+
+/* Application */
+include 'pips-app'
+include 'pips-app-service'
+
+/* 보안 */
+//include 'secure-app-service'
+
+/* 내부 모듈 */
+include 'modules'
+include 'modules:http-module'
+include 'modules:socket-module'
+
+/* 외부 클라이언트 */
+include 'clients'
+
+/* 테스트 지원 */
+include 'pips-test-support'
+
+
