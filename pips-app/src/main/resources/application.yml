@@ -22,7 +22,7 @@ info:
   app:
     name: Privacy Information Processing System
     name-kor: 개인정보 처리 시스템
-    group: io.glory.privacy
+    group: io.glory.pips
     alias: pips-app
 
 # =====================================================================================================================

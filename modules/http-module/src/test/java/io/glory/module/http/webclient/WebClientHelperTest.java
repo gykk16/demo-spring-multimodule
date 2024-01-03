@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+@SuppressWarnings("unchecked")
 class WebClientHelperTest {
 
     @DisplayName("WebClientHelper call 성공")
