@@ -1,6 +1,7 @@
 package io.glory.coreweb.handler;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import io.glory.mcore.code.ErrorCode;
 import io.glory.mcore.code.ResponseCode;
 import io.glory.mcore.exceptions.BizException;
 import io.glory.mcore.exceptions.BizRuntimeException;
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -73,6 +76,7 @@ public class CommonExceptionHandler {
             MethodArgumentNotValidException.class,
             MethodArgumentTypeMismatchException.class,
             HttpMessageNotReadableException.class,
+            HandlerMethodValidationException.class,
             Exception.class
     })
     public ResponseEntity<ApiResponseEntity<Object>> handleException(HttpServletRequest request, Exception ex) {
@@ -91,6 +95,9 @@ public class CommonExceptionHandler {
 
         } else if (ex instanceof HttpMessageNotReadableException subEx) {
             return handleHttpMessageNotReadableException(request, subEx, ErrorCode.NOT_READABLE);
+
+        } else if (ex instanceof HandlerMethodValidationException subEx) {
+            return handleHandlerMethodValidationException(request, subEx, ErrorCode.VALIDATION_FAILURE);
 
         } else {
             return createApiResponseEntity(request, ErrorCode.ERROR, ex, true, true);
@@ -133,6 +140,23 @@ public class CommonExceptionHandler {
             HttpServletRequest request, HttpMessageNotReadableException ex, ResponseCode errorCode) {
 
         return createApiResponseEntity(request, errorCode, ex);
+    }
+
+    private ResponseEntity<ApiResponseEntity<Object>> handleHandlerMethodValidationException(
+            HttpServletRequest request, HandlerMethodValidationException ex, ResponseCode errorCode) {
+
+        Map<String, String> errors = new HashMap<>();
+        ex.getAllValidationResults().forEach(validationResult -> {
+            List<MessageSourceResolvable> resolvableErrors = validationResult.getResolvableErrors();
+            resolvableErrors.forEach(resolvableError -> {
+                boolean hasField = resolvableError.getCodes() != null && resolvableError.getCodes().length > 1;
+                String fieldName = hasField ? resolvableError.getCodes()[1] : "field";
+                String errorMessage = resolvableError.getDefaultMessage();
+                errors.put(fieldName, errorMessage);
+            });
+        });
+
+        return createApiResponseEntity(request, errorCode, ex, false, false, errors);
     }
 
 }

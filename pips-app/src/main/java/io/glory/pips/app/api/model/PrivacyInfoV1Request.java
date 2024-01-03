@@ -11,7 +11,7 @@ import io.glory.pips.app.service.model.PrivacyInfoServiceRequest;
 import io.glory.pips.data.constants.bank.BankCode;
 
 /**
- * 개인정보 등록 V1 요청 Spec
+ * 개인정보 조회 V1 요청 Spec
  *
  * @param name      이름
  * @param mobileNo  휴대폰 번호

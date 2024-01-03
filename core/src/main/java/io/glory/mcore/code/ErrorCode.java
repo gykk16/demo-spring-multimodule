@@ -17,6 +17,7 @@ public enum ErrorCode implements ResponseCode {
     //
     NOT_READABLE(400, false, "ERR100", "잘못된 요청 입니다."),
     INVALID_ARGUMENT(400, false, "ERR111", "파라미터 오류 입니다."),
+    VALIDATION_FAILURE(400, false, "ERR112", "데이터 검증 오류 입니다."),
     // 500
     ERROR(500, false, "ERR999", "오류가 발생 했습니다."),
     SYSTEM_ERROR(500, false, "SYS999", "시스템 오류가 발생 했습니다."),

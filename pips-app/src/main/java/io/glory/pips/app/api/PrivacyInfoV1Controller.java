@@ -2,6 +2,8 @@ package io.glory.pips.app.api;
 
 import java.util.List;
 
+import jakarta.validation.constraints.Size;
+
 import lombok.RequiredArgsConstructor;
 
 import io.glory.coreweb.response.ApiResponseEntity;
@@ -43,7 +45,7 @@ public class PrivacyInfoV1Controller {
      */
     @PostMapping("/list")
     public ResponseEntity<ApiResponseEntity<List<PrivacyInfoV1Response>>> fetchPrivacyInfos(
-            @RequestBody List<Long> ids) {
+            @RequestBody @Size(min = 1, max = 10) List<Long> ids) {
 
         List<PrivacyInfoV1Response> responseList = privacyInfoService.fetchPrivacyInfos(ids)
                 .stream()
