@@ -30,10 +30,10 @@ public abstract class ApiDbLogAspect {
      * 어플리케이션 레이어에서 저장 로직을 구현 한다
      * </p>
      */
-    protected abstract void buildAndSaveApiReqResLog(ProceedingJoinPoint joinPoint, boolean success, int httpStatus,
-            String resCode, String resMsg, String exception, String rootCause) throws IOException;
+    protected abstract void buildAndSaveApiReqResLog(ProceedingJoinPoint joinPoint, ApiDbLog apiDbLog, boolean success,
+            int httpStatus, String resCode, String resMsg, String exception, String rootCause) throws IOException;
 
-    protected void saveApiReqResLog(ProceedingJoinPoint joinPoint, Object proceed) {
+    protected void saveApiReqResLog(ProceedingJoinPoint joinPoint, ApiDbLog apiDbLog, Object proceed) {
         try {
             String resCode = null;
             String resMsg = null;
@@ -48,14 +48,14 @@ public abstract class ApiDbLogAspect {
                 }
             }
 
-            buildAndSaveApiReqResLog(joinPoint, true, httpStatus, resCode, resMsg, null, null);
+            buildAndSaveApiReqResLog(joinPoint, apiDbLog, true, httpStatus, resCode, resMsg, null, null);
 
         } catch (Exception e) {
             log.error("# ==> Error in logging API request: ", e);
         }
     }
 
-    protected void saveExceptionApiReqResLog(ProceedingJoinPoint joinPoint, Exception e) {
+    protected void saveExceptionApiReqResLog(ProceedingJoinPoint joinPoint, ApiDbLog apiDbLog, Exception e) {
         try {
             String resCode;
             String resMsg;
@@ -80,7 +80,7 @@ public abstract class ApiDbLogAspect {
             String exception = e.getClass().getName();
             String rootCause = substringN(getRootCause(e).toString(), 255);
 
-            buildAndSaveApiReqResLog(joinPoint, false, httpStatus, resCode, resMsg, exception, rootCause);
+            buildAndSaveApiReqResLog(joinPoint, apiDbLog, false, httpStatus, resCode, resMsg, exception, rootCause);
 
         } catch (Exception ex) {
             log.error("# ==> Error updating API response log: ", ex);
