@@ -28,7 +28,7 @@ public class QuerydslExpressions {
      * @return 검색 조건
      */
     public static BooleanExpression eq(StringPath path, String right) {
-        return StringUtils.isNullOrEmpty(right) ? path.eq(right) : null;
+        return !StringUtils.isNullOrEmpty(right) ? path.eq(right) : null;
     }
 
     /**
@@ -120,7 +120,7 @@ public class QuerydslExpressions {
      * @return 검색 조건
      */
     public static BooleanExpression startsWith(StringPath path, String right) {
-        return StringUtils.isNullOrEmpty(right) ? path.startsWith(right) : null;
+        return !StringUtils.isNullOrEmpty(right) ? path.startsWith(right) : null;
     }
 
     /**
@@ -131,7 +131,7 @@ public class QuerydslExpressions {
      * @return 검색 조건
      */
     public static BooleanExpression contains(StringPath path, String right) {
-        return StringUtils.isNullOrEmpty(right) ? path.contains(right) : null;
+        return !StringUtils.isNullOrEmpty(right) ? path.contains(right) : null;
     }
 
     /**
@@ -212,32 +212,32 @@ public class QuerydslExpressions {
     /**
      * 일시 검색 조건
      *
-     * @param path      대상 필드 (column)
-     * @param startDate 비교 시작일
-     * @param endDate   비교 종료일
+     * @param path    대상 필드 (column)
+     * @param startDt 비교 시작일시
+     * @param endDt   비교 종료일시
      * @return 검색 조건
      */
     public static BooleanExpression dateTimeBetween(DateTimePath<LocalDateTime> path,
-            LocalDate startDate, LocalDate endDate) {
+            LocalDateTime startDt, LocalDateTime endDt) {
 
         // 시작, 종료 검색 일자가 비어 있으면
-        if (startDate == null && endDate == null) {
+        if (startDt == null && endDt == null) {
             return null; // fast exit
         }
 
         BooleanExpression booleanExpression = null;
 
         // 시작, 종료 검색 일자가 모두 있으면
-        if (startDate != null && endDate != null) {
-            booleanExpression = path.between(startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay());
+        if (startDt != null && endDt != null) {
+            booleanExpression = path.between(startDt, endDt);
         }
         // 시작일 있으면 세팅
-        else if (startDate != null) {
-            booleanExpression = path.after(startDate.atStartOfDay());
+        else if (startDt != null) {
+            booleanExpression = path.after(startDt);
         }
         // 종료일 있으면 세팅
         else {
-            booleanExpression = path.before(endDate.plusDays(1).atStartOfDay());
+            booleanExpression = path.before(endDt);
         }
 
         return booleanExpression;
