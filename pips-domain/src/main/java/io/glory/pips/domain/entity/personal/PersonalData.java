@@ -67,4 +67,12 @@ public class PersonalData extends BaseEntity {
         this.phoneNo = phoneNo;
         this.privacyInfo = privacyInfo;
     }
+
+    public void updatePersonalData(String name, LocalDate birthDate, String mobileNo, String phoneNo) {
+        this.name = name;
+        this.birthDate = birthDate;
+        this.mobileNo = mobileNo;
+        this.phoneNo = phoneNo;
+    }
+
 }

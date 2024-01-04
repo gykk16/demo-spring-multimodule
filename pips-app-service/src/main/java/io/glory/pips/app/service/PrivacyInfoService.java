@@ -1,9 +1,9 @@
 package io.glory.pips.app.service;
 
 import static io.glory.pips.app.service.exception.PrivacyInfoErrorCode.DATA_NOT_FOUND;
+import static io.glory.pips.app.service.exception.PrivacyInfoErrorCode.UPDATE_ERROR;
 
 import java.util.List;
-import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class PrivacyInfoService {
+
+    private final PersonalDataService personalDataService;
+    private final BankAccountService  bankAccountService;
 
     private final PrivacyInfoRepository  privacyInfoRepository;
     private final PersonalDataRepository personalDataRepository;
@@ -50,7 +53,7 @@ public class PrivacyInfoService {
     @Transactional
     public Long savePrivacyInfo(PrivacyInfoServiceRequest request) {
 
-        PrivacyInfo privacyInfo = new PrivacyInfo( "ownerId");
+        PrivacyInfo privacyInfo = new PrivacyInfo("ownerId");
         PersonalData personalData = request.toPersonalDataEntity(privacyInfo);
         BankAccount bankAccount = request.toBankAccountEntity(privacyInfo);
 
@@ -59,6 +62,21 @@ public class PrivacyInfoService {
         bankAccountRepository.save(bankAccount);
 
         return saved.getId();
+    }
+
+    @Transactional
+    public Long updatePrivacyInfo(Long pInfoId, PrivacyInfoServiceRequest req) {
+
+        try {
+            personalDataService.updatePersonalData(pInfoId, req.name(), req.birthDate(), req.mobileNo(), req.phoneNo());
+            bankAccountService.updateBankAccount(pInfoId, req.bankCode(), req.accountNo(), req.holder());
+        } catch (PrivacyInfoException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new PrivacyInfoException(UPDATE_ERROR, e);
+        }
+
+        return pInfoId;
     }
 
 }

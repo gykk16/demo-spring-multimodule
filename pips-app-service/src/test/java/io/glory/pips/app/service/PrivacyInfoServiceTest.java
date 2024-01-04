@@ -167,6 +167,63 @@ class PrivacyInfoServiceTest extends IntegratedTestSupport {
                 () -> fail("저장된 개인정보가 없습니다."));
     }
 
+    @DisplayName("개인정보 를 수정한다")
+    @Test
+    void when_updatePrivacyInfo_expect_DbUpdate() throws Exception {
+        // given
+        String name = "홍길동";
+        String mobileNo = "01012345678";
+        String phoneNo = "021234567";
+        LocalDate birthDate = LocalDate.of(1990, 1, 1);
+        BankCode bankCode = BankCode.TEST_BANK;
+        String accountNo = "1234567890";
+
+        Long pInfoId = savePrivacyInfo(1, name, mobileNo, phoneNo, birthDate, bankCode, accountNo).get(0);
+
+        String newName = "김말자";
+        String newMobileNo = "01000000000";
+        String newPhoneNo = "0200000000";
+        LocalDate newBirthDate = LocalDate.of(2000, 1, 1);
+        BankCode newBankCode = BankCode.TEST_BANK;
+        String newAccountNo = "0987654321";
+        String newHolder = "김철수";
+
+        PrivacyInfoServiceRequest serviceRequest = new PrivacyInfoServiceRequest(
+                newName, newMobileNo, newPhoneNo, newBirthDate, newBankCode, newAccountNo, newHolder);
+
+        // when
+        Long updatedPInfoId = privacyInfoService.updatePrivacyInfo(pInfoId, serviceRequest);
+
+        // then
+        assertThat(updatedPInfoId).isEqualTo(pInfoId);
+        personalDataRepository.fetchByPrivacyInfoId(updatedPInfoId).ifPresentOrElse(
+                personalData -> assertThat(personalData).isNotNull()
+                        .extracting("name", "mobileNo", "phoneNo", "birthDate")
+                        .containsExactly(newName, newMobileNo, newPhoneNo, newBirthDate),
+                () -> fail("저장된 개인정보가 없습니다."));
+        bankAccountRepository.fetchByPrivacyInfoId(updatedPInfoId).ifPresentOrElse(
+                bankAccount -> assertThat(bankAccount).isNotNull()
+                        .extracting("bankCode", "accountNo", "holder")
+                        .containsExactly(newBankCode, newAccountNo, newHolder),
+                () -> fail("저장된 개인정보가 없습니다."));
+    }
+
+    @DisplayName("개인정보 를 수정할 때 개인정보가 없으면 DATA_NOT_FOUND 예외를 던진다")
+    @Test
+    void when_NoDataToUpdate_throw_DATA_NOT_FOUND() throws Exception {
+        // given
+        long nonExistId = 1L;
+        PrivacyInfoServiceRequest serviceRequest = new PrivacyInfoServiceRequest(
+                "김말자", "01000000000", "0200000000", LocalDate.of(2000, 1, 1),
+                BankCode.TEST_BANK, "0987654321", "김말자");
+
+        // when
+        assertThatThrownBy(() -> privacyInfoService.updatePrivacyInfo(nonExistId, serviceRequest))
+                // then
+                .isInstanceOf(PrivacyInfoException.class)
+                .hasMessageContaining(PrivacyInfoErrorCode.DATA_NOT_FOUND.getCode());
+    }
+
     private List<Long> savePrivacyInfo(int count, String name, String mobileNo, String phoneNo, LocalDate birthDate,
             BankCode bankCode, String accountNo) {
 

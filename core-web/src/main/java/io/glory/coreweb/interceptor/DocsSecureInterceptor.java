@@ -21,7 +21,7 @@ public class DocsSecureInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
 
-        String clientIP = IpAddrUtil.getClientIP();
+        String clientIP = IpAddrUtil.getClientRealIP(request);
         if (INTERNAL_IPS.contains(clientIP)) {
             return true;
         }

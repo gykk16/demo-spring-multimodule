@@ -2,6 +2,7 @@ package io.glory.pips.app.system.config;
 
 
 import static io.glory.coreweb.WebAppConst.INTERCEPTOR_EXCLUDE_PATH;
+import static io.glory.coreweb.WebAppConst.getMdcAccessId;
 
 import java.util.Optional;
 
@@ -70,7 +71,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     public AuditorAware<String> auditorProvider() {
-        return () -> Optional.of(appAlias + "-" + IpAddrUtil.getServerIpLastOctet());
+        return () -> Optional.of(getMdcAccessId().orElse(appAlias) + "-" + IpAddrUtil.getServerIpLastOctet());
     }
 
 }

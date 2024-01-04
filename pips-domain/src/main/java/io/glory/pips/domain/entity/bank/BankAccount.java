@@ -64,4 +64,10 @@ public class BankAccount extends BaseEntity {
         this.privacyInfo = privacyInfo;
     }
 
+    public void updateBankAccount(BankCode bankCode, String accountNo, String holder) {
+        this.bankCode = bankCode;
+        this.accountNo = accountNo;
+        this.holder = holder;
+    }
+
 }

@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,7 +58,7 @@ public class PrivacyInfoV1Controller {
     /**
      * 개인정보 저장
      *
-     * @param request 개인정보 저장 요청 Spec
+     * @param request 개인정보 저장/수정 요청 Spec
      */
     @PostMapping
     public ResponseEntity<ApiResponseEntity<Long>> savePrivacyInfo(
@@ -65,6 +66,19 @@ public class PrivacyInfoV1Controller {
 
         Long privacyInfoId = privacyInfoService.savePrivacyInfo(request.toServiceRequest());
         return ApiResponseEntity.of(SuccessCode.CREATED, privacyInfoId);
+    }
+
+    /**
+     * 개인정보 수정
+     *
+     * @param request 개인정보 저장/수정 요청 Spec
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponseEntity<Long>> updatePrivacyInfo(
+            @PathVariable Long id, @RequestBody PrivacyInfoV1Request request) {
+
+        Long privacyInfoId = privacyInfoService.updatePrivacyInfo(id, request.toServiceRequest());
+        return ApiResponseEntity.of(SuccessCode.SUCCESS, privacyInfoId);
     }
 
 }
