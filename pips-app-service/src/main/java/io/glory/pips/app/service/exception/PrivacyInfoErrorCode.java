@@ -13,6 +13,8 @@ public enum PrivacyInfoErrorCode implements ResponseCode {
     //
     UPDATE_ERROR(false, "PIE201", "수정 중 오류가 발생했습니다."),
     //
+    DELETE_ERROR(false, "PIE301", "수정 중 오류가 발생했습니다."),
+    //
     ERROR(false, "PIE999", "오류."),
     ;
 

@@ -1,6 +1,7 @@
 package io.glory.pips.domain.repository.personal;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.time.LocalDate;
 
@@ -61,6 +62,34 @@ class PersonalDataRepositoryTest extends IntegratedTestSupport {
         assertThat(fetched.getPrivacyInfo()).isNotNull();
         assertThat(fetched.getPrivacyInfo().getId()).isEqualTo(savedPrivacyInfo.getId());
         assertThat(fetched.getPrivacyInfo().getDataUuid()).isEqualTo(savedPrivacyInfo.getDataUuid());
+    }
+
+    @DisplayName("개인정보 id 로 개인 식별 정보를 조회 한다 - SoftDelete 된 정보는 조회 되지 않는다")
+    @Test
+    void when_fetchByPrivacyInfoId_expect_OnlyNonDeleted() throws Exception {
+        // given
+        String name = "홍길동";
+        String mobileNo = "01012345678";
+        String phoneNo = "021234567";
+        LocalDate birthDate = LocalDate.of(1990, 1, 1);
+
+        PrivacyInfo privacyInfo = new PrivacyInfo("ownerId");
+        PersonalData personalData = PersonalData.builder()
+                .name(name)
+                .mobileNo(mobileNo)
+                .phoneNo(phoneNo)
+                .birthDate(birthDate)
+                .privacyInfo(privacyInfo)
+                .build();
+
+        PrivacyInfo savedPrivacyInfo = privacyInfoRepository.save(privacyInfo);
+        PersonalData savedPersonalData = personalDataRepository.save(personalData);
+        privacyInfoRepository.deleteById(savedPrivacyInfo.getId());
+
+        // when
+        assertThatCode(() -> personalDataRepository.fetchByPrivacyInfoId(savedPrivacyInfo.getId()))
+                // then
+                .isNull();
     }
 
 }

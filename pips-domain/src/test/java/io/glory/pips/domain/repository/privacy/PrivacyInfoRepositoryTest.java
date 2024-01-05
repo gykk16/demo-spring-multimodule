@@ -1,10 +1,8 @@
-package io.glory.pips.domain.query;
+package io.glory.pips.domain.repository.privacy;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import io.glory.pips.data.constants.bank.BankCode;
 import io.glory.pips.domain.entity.bank.BankAccount;
@@ -12,17 +10,13 @@ import io.glory.pips.domain.entity.personal.PersonalData;
 import io.glory.pips.domain.entity.privacy.PrivacyInfo;
 import io.glory.pips.domain.repository.bank.BankAccountRepository;
 import io.glory.pips.domain.repository.personal.PersonalDataRepository;
-import io.glory.pips.domain.repository.privacy.PrivacyInfoRepository;
 import io.glory.testsupport.integrated.IntegratedTestSupport;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class PrivacyInfoQueryRepositoryTest extends IntegratedTestSupport {
-
-    @Autowired
-    private PrivacyInfoQueryRepository privacyInfoQueryRepository;
+class PrivacyInfoRepositoryTest extends IntegratedTestSupport {
 
     @Autowired
     private BankAccountRepository  bankAccountRepository;
@@ -38,9 +32,9 @@ class PrivacyInfoQueryRepositoryTest extends IntegratedTestSupport {
         privacyInfoRepository.deleteAllInBatch();
     }
 
-    @DisplayName("개인정보 id 로 개인 식별 정보를 조회 한다")
+    @DisplayName("개인정보 id 를 삭제 하면 Db 에서 SoftDelete 된다")
     @Test
-    void fetchPrivacyInfos() throws Exception {
+    void when_delete_expect_SoftDelete() throws Exception {
         // given
         String name = "홍길동";
         String mobileNo = "01012345678";
@@ -62,22 +56,10 @@ class PrivacyInfoQueryRepositoryTest extends IntegratedTestSupport {
         personalDataRepository.save(personalData);
 
         // when
-        PrivacyInfoAllDto fetched = privacyInfoQueryRepository.fetchPrivacyInfos(List.of(savedInfo.getId()))
-                .stream().findFirst().orElseThrow();
+        privacyInfoRepository.deleteById(savedInfo.getId());
 
         // then
-        System.out.println("==> fetched = " + fetched);
-        assertThat(fetched).isNotNull();
-        assertThat(fetched.getId()).isEqualTo(savedInfo.getId());
-        assertThat(fetched.getDataUuid()).isNotNull();
-        assertThat(fetched.getName()).isEqualTo(name);
-        assertThat(fetched.getMobileNo()).isEqualTo(mobileNo);
-        assertThat(fetched.getPhoneNo()).isEqualTo(phoneNo);
-        assertThat(fetched.getBirthDate()).isEqualTo(birthDate);
-        assertThat(fetched.getBankCode()).isEqualTo(BankCode.TEST_BANK);
-        assertThat(fetched.getAccountNo()).isEqualTo(accountNo);
-        assertThat(fetched.getHolder()).isEqualTo(name);
-        assertThat(fetched.getRegDt()).isNotNull();
+        assertThatCode(() -> privacyInfoRepository.findById(savedInfo.getId())).isNull();
     }
 
 }

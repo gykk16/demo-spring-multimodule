@@ -71,6 +71,7 @@ public class PrivacyInfoV1Controller {
     /**
      * 개인정보 수정
      *
+     * @param id      개인정보 id
      * @param request 개인정보 저장/수정 요청 Spec
      */
     @PutMapping("/{id}")
@@ -78,6 +79,18 @@ public class PrivacyInfoV1Controller {
             @PathVariable Long id, @RequestBody PrivacyInfoV1Request request) {
 
         Long privacyInfoId = privacyInfoService.updatePrivacyInfo(id, request.toServiceRequest());
+        return ApiResponseEntity.of(SuccessCode.SUCCESS, privacyInfoId);
+    }
+
+    /**
+     * 개인정보 수정
+     *
+     * @param id 개인정보 id
+     */
+    @PostMapping("/{id}/delete")
+    public ResponseEntity<ApiResponseEntity<Long>> deletePrivacyInfo(@PathVariable Long id) {
+
+        Long privacyInfoId = privacyInfoService.deletePrivacyInfo(id);
         return ApiResponseEntity.of(SuccessCode.SUCCESS, privacyInfoId);
     }
 

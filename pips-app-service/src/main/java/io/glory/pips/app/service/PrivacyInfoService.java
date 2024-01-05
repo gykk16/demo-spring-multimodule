@@ -1,6 +1,7 @@
 package io.glory.pips.app.service;
 
 import static io.glory.pips.app.service.exception.PrivacyInfoErrorCode.DATA_NOT_FOUND;
+import static io.glory.pips.app.service.exception.PrivacyInfoErrorCode.DELETE_ERROR;
 import static io.glory.pips.app.service.exception.PrivacyInfoErrorCode.UPDATE_ERROR;
 
 import java.util.List;
@@ -70,10 +71,28 @@ public class PrivacyInfoService {
         try {
             personalDataService.updatePersonalData(pInfoId, req.name(), req.birthDate(), req.mobileNo(), req.phoneNo());
             bankAccountService.updateBankAccount(pInfoId, req.bankCode(), req.accountNo(), req.holder());
+
         } catch (PrivacyInfoException e) {
             throw e;
         } catch (Exception e) {
             throw new PrivacyInfoException(UPDATE_ERROR, e);
+        }
+
+        return pInfoId;
+    }
+
+    @Transactional
+    public Long deletePrivacyInfo(Long pInfoId) {
+
+        try {
+            PrivacyInfo privacyInfo = privacyInfoRepository.findById(pInfoId)
+                    .orElseThrow(() -> new PrivacyInfoException(DATA_NOT_FOUND));
+            privacyInfoRepository.delete(privacyInfo);
+
+        } catch (PrivacyInfoException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new PrivacyInfoException(DELETE_ERROR, e);
         }
 
         return pInfoId;

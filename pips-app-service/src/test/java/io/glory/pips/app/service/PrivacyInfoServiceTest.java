@@ -1,5 +1,6 @@
 package io.glory.pips.app.service;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.fail;
@@ -219,6 +220,41 @@ class PrivacyInfoServiceTest extends IntegratedTestSupport {
 
         // when
         assertThatThrownBy(() -> privacyInfoService.updatePrivacyInfo(nonExistId, serviceRequest))
+                // then
+                .isInstanceOf(PrivacyInfoException.class)
+                .hasMessageContaining(PrivacyInfoErrorCode.DATA_NOT_FOUND.getCode());
+    }
+
+    @DisplayName("개인정보 를 삭제 한다 (soft delete)")
+    @Test
+    void when_deletePrivacyInfo_expect_DbSoftDelete() throws Exception {
+        // given
+        String name = "홍길동";
+        String mobileNo = "01012345678";
+        String phoneNo = "021234567";
+        LocalDate birthDate = LocalDate.of(1990, 1, 1);
+        BankCode bankCode = BankCode.TEST_BANK;
+        String accountNo = "1234567890";
+
+        Long pInfoId = savePrivacyInfo(1, name, mobileNo, phoneNo, birthDate, bankCode, accountNo).get(0);
+
+        // when
+        Long deletedPInfoId = privacyInfoService.deletePrivacyInfo(pInfoId);
+
+        // then
+        assertThat(deletedPInfoId).isEqualTo(pInfoId);
+        assertThatCode(() -> privacyInfoRepository.findById(deletedPInfoId))
+                .isNull();
+    }
+
+    @DisplayName("개인정보 를 삭제할 때 개인정보가 없으면 DATA_NOT_FOUND 예외를 던진다")
+    @Test
+    void when_NoDataToDelete_throw_DATA_NOT_FOUND() throws Exception {
+        // given
+        long nonExistId = 1L;
+
+        // when
+        assertThatThrownBy(() -> privacyInfoService.deletePrivacyInfo(nonExistId))
                 // then
                 .isInstanceOf(PrivacyInfoException.class)
                 .hasMessageContaining(PrivacyInfoErrorCode.DATA_NOT_FOUND.getCode());

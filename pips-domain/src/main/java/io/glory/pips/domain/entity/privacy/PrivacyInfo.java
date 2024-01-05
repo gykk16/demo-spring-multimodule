@@ -16,12 +16,16 @@ import lombok.NoArgsConstructor;
 
 import io.glory.pips.domain.entity.base.BaseEntity;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.SoftDelete;
+import org.hibernate.annotations.SoftDeleteType;
+import org.hibernate.type.YesNoConverter;
 
 /**
  * 개인정보 마스터 테이블
  */
 @Entity
 @Table(name = "privacy_info")
+@SoftDelete(columnName = "deleted", strategy = SoftDeleteType.DELETED, converter = YesNoConverter.class)
 @SequenceGenerator(
         name = "seq_privacy_info_id_generator",
         sequenceName = "seq_privacy_info_id",
