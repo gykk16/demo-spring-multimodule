@@ -23,7 +23,7 @@ import org.springframework.util.StringUtils;
 /**
  * 표준 API 응답 객체
  *
- * @param <T> data type
+ * @param <T> 응답 데이터 타입
  */
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @Getter
