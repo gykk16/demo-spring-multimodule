@@ -1,6 +1,7 @@
 package io.glory.pips.app.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDate;
@@ -19,6 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 class PersonalDataServiceTest extends IntegratedTestSupport {
 
+    private static final String    NAME       = "홍길동";
+    private static final String    MOBILE_NO  = "01012345678";
+    private static final String    PHONE_NO   = "021234567";
+    private static final LocalDate BIRTH_DATE = LocalDate.of(1990, 1, 1);
+
     @Autowired
     private PersonalDataService    personalDataService;
     @Autowired
@@ -32,15 +38,25 @@ class PersonalDataServiceTest extends IntegratedTestSupport {
         privacyInfoRepository.deleteAllInBatch();
     }
 
+    @DisplayName("개인 식별 정보를 저장 한다")
+    @Test
+    void when_save_expect_DbInsert() throws Exception {
+        // given
+        PrivacyInfo privacyInfo = new PrivacyInfo("ownerId");
+        PrivacyInfo pInfo = privacyInfoRepository.save(privacyInfo);
+
+        // when
+        long savedId = personalDataService.save(NAME, BIRTH_DATE, MOBILE_NO, PHONE_NO, pInfo);
+
+        // then
+        assertThatCode(() -> personalDataRepository.findById(savedId).orElseThrow())
+                .doesNotThrowAnyException();
+    }
+
     @DisplayName("개인 식별 정보를 업데이트 한다")
     @Test
     void when_updatePersonalData_expect_DbUpdate() throws Exception {
         // given
-        String name = "홍길동";
-        String mobileNo = "01012345678";
-        String phoneNo = "021234567";
-        LocalDate birthDate = LocalDate.of(1990, 1, 1);
-
         String newName = "김말자";
         String newMobileNo = "01000000000";
         String newPhoneNo = "0200000000";
@@ -48,10 +64,10 @@ class PersonalDataServiceTest extends IntegratedTestSupport {
 
         PrivacyInfo privacyInfo = new PrivacyInfo("ownerId");
         PersonalData personalData = PersonalData.builder()
-                .name(name)
-                .mobileNo(mobileNo)
-                .phoneNo(phoneNo)
-                .birthDate(birthDate)
+                .name(NAME)
+                .mobileNo(MOBILE_NO)
+                .phoneNo(PHONE_NO)
+                .birthDate(BIRTH_DATE)
                 .privacyInfo(privacyInfo)
                 .build();
 
@@ -59,7 +75,7 @@ class PersonalDataServiceTest extends IntegratedTestSupport {
         PersonalData saved = personalDataRepository.save(personalData);
 
         // when
-        personalDataService.updatePersonalData(pInfo.getId(), newName, newBirthDate, newMobileNo, newPhoneNo);
+        personalDataService.update(pInfo.getId(), newName, newBirthDate, newMobileNo, newPhoneNo);
 
         // then
         PersonalData updated = personalDataRepository.findById(saved.getId()).orElseThrow();
@@ -75,7 +91,7 @@ class PersonalDataServiceTest extends IntegratedTestSupport {
         long nonExistingId = 1L;
 
         // when
-        assertThatThrownBy(() -> personalDataService.updatePersonalData(nonExistingId, "", null, "", ""))
+        assertThatThrownBy(() -> personalDataService.update(nonExistingId, "", null, "", ""))
                 // then
                 .isInstanceOf(PrivacyInfoException.class)
                 .hasMessageContaining(PrivacyInfoErrorCode.DATA_NOT_FOUND.getMessage());

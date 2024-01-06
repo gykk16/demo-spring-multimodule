@@ -35,11 +35,7 @@ public class PrivacyInfoService {
     private final PrivacyInfoQueryRepository privacyInfoQueryRepository;
 
     public PrivacyInfoAllDto fetchPrivacyInfo(long id) {
-
-        return privacyInfoQueryRepository.fetchPrivacyInfos(List.of(id))
-                .stream()
-                .findFirst()
-                .orElseThrow(() -> new PrivacyInfoException(DATA_NOT_FOUND));
+        return fetchPrivacyInfos(List.of(id)).get(0);
     }
 
     public List<PrivacyInfoAllDto> fetchPrivacyInfos(List<Long> ids) {
@@ -69,8 +65,8 @@ public class PrivacyInfoService {
     public Long updatePrivacyInfo(Long pInfoId, PrivacyInfoServiceRequest req) {
 
         try {
-            personalDataService.updatePersonalData(pInfoId, req.name(), req.birthDate(), req.mobileNo(), req.phoneNo());
-            bankAccountService.updateBankAccount(pInfoId, req.bankCode(), req.accountNo(), req.holder());
+            personalDataService.update(pInfoId, req.name(), req.birthDate(), req.mobileNo(), req.phoneNo());
+            bankAccountService.update(pInfoId, req.bankCode(), req.accountNo(), req.holder());
 
         } catch (PrivacyInfoException e) {
             throw e;

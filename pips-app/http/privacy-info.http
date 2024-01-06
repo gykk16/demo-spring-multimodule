@@ -34,3 +34,24 @@ Content-Type: application/json
   6
 ]
 
+###
+# 데이터 수정
+PUT /pips/v1/p-info/2
+host: localhost:8080
+Content-Type: application/json
+
+{
+  "name": "김말자",
+  "mobileNo": "01000000000",
+  "phoneNo": "0200000000",
+  "birthDate": "2000-01-01",
+  "bankCode": "TEST_BANK",
+  "accountNo": "1234567890",
+  "holder": "김말자"
+}
+
+###
+# 데이터 삭제
+POST /pips/v1/p-info/2/delete
+host: localhost:8080
+Content-Type: application/json

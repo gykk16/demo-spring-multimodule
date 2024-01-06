@@ -46,10 +46,11 @@ class PrivacyInfoV1ResponseTest {
 
         // then
         assertThat(privacyInfoV1Response).isNotNull()
-                .extracting("id", "dataUuid", "name", "mobileNo", "phoneNo", "birthDate",
-                        "bankCode", "accountNo", "holder", "regDt")
-                .containsExactly(id, dataUuid, name, mobileNo, phoneNo, birthDate,
-                        bankCode, accountNo, holder, regDt);
+                .extracting("id", "dataUuid", "regDt", "personalData", "bankAccount")
+                .contains(id, dataUuid, regDt,
+                        new PersonalDataV1Response(name, mobileNo, phoneNo, birthDate),
+                        new BankAccountV1Response(bankCode, accountNo, holder)
+                );
     }
 
 }

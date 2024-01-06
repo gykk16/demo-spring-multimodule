@@ -1,10 +1,6 @@
 package io.glory.pips.app.service;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.fail;
-import static org.assertj.core.api.Assertions.tuple;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -29,6 +25,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 class PrivacyInfoServiceTest extends IntegratedTestSupport {
 
+    private static final String    NAME       = "홍길동";
+    private static final String    MOBILE_NO  = "01012345678";
+    private static final String    PHONE_NO   = "021234567";
+    private static final LocalDate BIRTH_DATE = LocalDate.of(1990, 1, 1);
+    private static final BankCode  BANK_CODE  = BankCode.TEST_BANK;
+    private static final String    ACCOUNT_NO = "1234567890";
+
     @Autowired
     private PrivacyInfoService     privacyInfoService;
     @Autowired
@@ -49,14 +52,7 @@ class PrivacyInfoServiceTest extends IntegratedTestSupport {
     @Test
     void when_fetchPrivacyInfo_expect_PrivacyInfoAllDto() throws Exception {
         // given
-        String name = "홍길동";
-        String mobileNo = "01012345678";
-        String phoneNo = "021234567";
-        LocalDate birthDate = LocalDate.of(1990, 1, 1);
-        BankCode bankCode = BankCode.TEST_BANK;
-        String accountNo = "1234567890";
-
-        Long id = savePrivacyInfo(1, name, mobileNo, phoneNo, birthDate, bankCode, accountNo).get(0);
+        Long id = savePrivacyInfo(1, NAME, MOBILE_NO, PHONE_NO, BIRTH_DATE, BANK_CODE, ACCOUNT_NO).get(0);
 
         // when
         PrivacyInfoAllDto privacyInfoAllDto = privacyInfoService.fetchPrivacyInfo(id);
@@ -66,8 +62,8 @@ class PrivacyInfoServiceTest extends IntegratedTestSupport {
         assertThat(privacyInfoAllDto).isNotNull()
                 .extracting("id", "name", "mobileNo", "phoneNo",
                         "birthDate", "bankCode", "accountNo")
-                .contains(id, name, mobileNo, phoneNo,
-                        birthDate, BankCode.TEST_BANK, accountNo);
+                .contains(id, NAME, MOBILE_NO, PHONE_NO,
+                        BIRTH_DATE, BankCode.TEST_BANK, ACCOUNT_NO);
         assertThat(privacyInfoAllDto.getRegDt()).isNotNull();
     }
 
@@ -88,14 +84,7 @@ class PrivacyInfoServiceTest extends IntegratedTestSupport {
     @Test
     void when_fetchPrivacyInfos_expect_PrivacyInfoAllDtoList() throws Exception {
         // given
-        String name = "홍길동";
-        String mobileNo = "01012345678";
-        String phoneNo = "021234567";
-        LocalDate birthDate = LocalDate.of(1990, 1, 1);
-        BankCode bankCode = BankCode.TEST_BANK;
-        String accountNo = "1234567890";
-
-        List<Long> ids = savePrivacyInfo(3, name, mobileNo, phoneNo, birthDate, bankCode, accountNo);
+        List<Long> ids = savePrivacyInfo(3, NAME, MOBILE_NO, PHONE_NO, BIRTH_DATE, BANK_CODE, ACCOUNT_NO);
 
         // when
         List<PrivacyInfoAllDto> privacyInfoAllDtos = privacyInfoService.fetchPrivacyInfos(ids);
@@ -106,12 +95,12 @@ class PrivacyInfoServiceTest extends IntegratedTestSupport {
                 .extracting("id", "name", "mobileNo", "phoneNo",
                         "birthDate", "bankCode", "accountNo")
                 .containsExactlyInAnyOrder(
-                        tuple(ids.get(0), name, mobileNo, phoneNo,
-                                birthDate, BankCode.TEST_BANK, accountNo),
-                        tuple(ids.get(1), name, mobileNo, phoneNo,
-                                birthDate, BankCode.TEST_BANK, accountNo),
-                        tuple(ids.get(2), name, mobileNo, phoneNo,
-                                birthDate, BankCode.TEST_BANK, accountNo)
+                        tuple(ids.get(0), NAME, MOBILE_NO, PHONE_NO,
+                                BIRTH_DATE, BankCode.TEST_BANK, ACCOUNT_NO),
+                        tuple(ids.get(1), NAME, MOBILE_NO, PHONE_NO,
+                                BIRTH_DATE, BankCode.TEST_BANK, ACCOUNT_NO),
+                        tuple(ids.get(2), NAME, MOBILE_NO, PHONE_NO,
+                                BIRTH_DATE, BankCode.TEST_BANK, ACCOUNT_NO)
                 );
     }
 
@@ -132,14 +121,8 @@ class PrivacyInfoServiceTest extends IntegratedTestSupport {
     @Test
     void when_savePrivacyInfo_expect_DbInsert() throws Exception {
         // given
-        String name = "홍길동";
-        String mobileNo = "01012345678";
-        String phoneNo = "021234567";
-        LocalDate birthDate = LocalDate.of(1990, 1, 1);
-        BankCode bankCode = BankCode.TEST_BANK;
-        String accountNo = "1234567890";
         PrivacyInfoServiceRequest serviceRequest = new PrivacyInfoServiceRequest(
-                name, mobileNo, phoneNo, birthDate, bankCode, accountNo, name);
+                NAME, MOBILE_NO, PHONE_NO, BIRTH_DATE, BANK_CODE, ACCOUNT_NO, NAME);
 
         // when
         Long savedId = privacyInfoService.savePrivacyInfo(serviceRequest);
@@ -153,17 +136,17 @@ class PrivacyInfoServiceTest extends IntegratedTestSupport {
                 () -> fail("저장된 개인정보가 없습니다."));
         personalDataRepository.fetchByPrivacyInfoId(savedId).ifPresentOrElse(personalData -> {
                     assertThat(personalData).isNotNull();
-                    assertThat(personalData.getName()).isEqualTo(name);
-                    assertThat(personalData.getMobileNo()).isEqualTo(mobileNo);
-                    assertThat(personalData.getPhoneNo()).isEqualTo(phoneNo);
-                    assertThat(personalData.getBirthDate()).isEqualTo(birthDate);
+                    assertThat(personalData.getName()).isEqualTo(NAME);
+                    assertThat(personalData.getMobileNo()).isEqualTo(MOBILE_NO);
+                    assertThat(personalData.getPhoneNo()).isEqualTo(PHONE_NO);
+                    assertThat(personalData.getBirthDate()).isEqualTo(BIRTH_DATE);
                 },
                 () -> fail("저장된 개인정보가 없습니다."));
         bankAccountRepository.fetchByPrivacyInfoId(savedId).ifPresentOrElse(bankAccount -> {
                     assertThat(bankAccount).isNotNull();
-                    assertThat(bankAccount.getBankCode()).isEqualTo(bankCode);
-                    assertThat(bankAccount.getAccountNo()).isEqualTo(accountNo);
-                    assertThat(bankAccount.getHolder()).isEqualTo(name);
+                    assertThat(bankAccount.getBankCode()).isEqualTo(BANK_CODE);
+                    assertThat(bankAccount.getAccountNo()).isEqualTo(ACCOUNT_NO);
+                    assertThat(bankAccount.getHolder()).isEqualTo(NAME);
                 },
                 () -> fail("저장된 개인정보가 없습니다."));
     }
@@ -172,14 +155,7 @@ class PrivacyInfoServiceTest extends IntegratedTestSupport {
     @Test
     void when_updatePrivacyInfo_expect_DbUpdate() throws Exception {
         // given
-        String name = "홍길동";
-        String mobileNo = "01012345678";
-        String phoneNo = "021234567";
-        LocalDate birthDate = LocalDate.of(1990, 1, 1);
-        BankCode bankCode = BankCode.TEST_BANK;
-        String accountNo = "1234567890";
-
-        Long pInfoId = savePrivacyInfo(1, name, mobileNo, phoneNo, birthDate, bankCode, accountNo).get(0);
+        Long pInfoId = savePrivacyInfo(1, NAME, MOBILE_NO, PHONE_NO, BIRTH_DATE, BANK_CODE, ACCOUNT_NO).get(0);
 
         String newName = "김말자";
         String newMobileNo = "01000000000";
@@ -229,14 +205,7 @@ class PrivacyInfoServiceTest extends IntegratedTestSupport {
     @Test
     void when_deletePrivacyInfo_expect_DbSoftDelete() throws Exception {
         // given
-        String name = "홍길동";
-        String mobileNo = "01012345678";
-        String phoneNo = "021234567";
-        LocalDate birthDate = LocalDate.of(1990, 1, 1);
-        BankCode bankCode = BankCode.TEST_BANK;
-        String accountNo = "1234567890";
-
-        Long pInfoId = savePrivacyInfo(1, name, mobileNo, phoneNo, birthDate, bankCode, accountNo).get(0);
+        Long pInfoId = savePrivacyInfo(1, NAME, MOBILE_NO, PHONE_NO, BIRTH_DATE, BANK_CODE, ACCOUNT_NO).get(0);
 
         // when
         Long deletedPInfoId = privacyInfoService.deletePrivacyInfo(pInfoId);

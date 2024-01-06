@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 
 import io.glory.coreweb.response.ApiResponseEntity;
+import io.glory.coreweb.response.CollectionResObj;
 import io.glory.mcore.code.SuccessCode;
 import io.glory.pips.app.api.model.PrivacyInfoV1Request;
 import io.glory.pips.app.api.model.PrivacyInfoV1Response;
@@ -35,6 +36,7 @@ public class PrivacyInfoV1Controller {
      */
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponseEntity<PrivacyInfoV1Response>> fetchPrivacyInfo(@PathVariable Long id) {
+
         PrivacyInfoAllDto privacyInfoAllDto = privacyInfoService.fetchPrivacyInfo(id);
         return ApiResponseEntity.of(SuccessCode.SUCCESS, PrivacyInfoV1Response.of(privacyInfoAllDto));
     }
@@ -45,14 +47,15 @@ public class PrivacyInfoV1Controller {
      * @param ids 개인정보 id 목록
      */
     @PostMapping("/list")
-    public ResponseEntity<ApiResponseEntity<List<PrivacyInfoV1Response>>> fetchPrivacyInfos(
+    public ResponseEntity<ApiResponseEntity<CollectionResObj<?>>> fetchPrivacyInfos(
             @RequestBody @Size(min = 1, max = 10) List<Long> ids) {
 
         List<PrivacyInfoV1Response> responseList = privacyInfoService.fetchPrivacyInfos(ids)
                 .stream()
                 .map(PrivacyInfoV1Response::of)
                 .toList();
-        return ApiResponseEntity.of(SuccessCode.SUCCESS, responseList);
+        var collectionResObj = new CollectionResObj<>(responseList);
+        return ApiResponseEntity.of(SuccessCode.SUCCESS, collectionResObj);
     }
 
     /**
@@ -83,7 +86,7 @@ public class PrivacyInfoV1Controller {
     }
 
     /**
-     * 개인정보 수정
+     * 개인정보 삭제
      *
      * @param id 개인정보 id
      */
