@@ -22,6 +22,8 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @ExtendWith(RestDocumentationExtension.class)
 public abstract class RestDocsSupport {
 
+    private static final String HOST = "www.example.com";
+
     protected static ObjectMapper                   objectMapper = new ObjectMapper();
     protected        RestDocumentationResultHandler restDocs     = write();
     protected        MockMvc                        mockMvc;
@@ -33,11 +35,10 @@ public abstract class RestDocsSupport {
 
         this.mockMvc = MockMvcBuilders
                 .standaloneSetup(initController())
-                // .setControllerAdvice(new LegacyErrorHandler(), new LssendJsonErrorHandler())
                 // .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                 .addFilters(new CharacterEncodingFilter(UTF_8.name(), true))
                 .apply(MockMvcRestDocumentation.documentationConfiguration(provider)
-                        .uris().withScheme("https").withHost("tncorp.smilecon.co.kr").withPort(443))
+                        .uris().withScheme("https").withHost(HOST).withPort(443))
                 .alwaysDo(print())
                 .alwaysDo(restDocs)
                 .build();
@@ -54,7 +55,7 @@ public abstract class RestDocsSupport {
     private static UriModifyingOperationPreprocessor getHost() {
         return Preprocessors.modifyUris()
                 .scheme("https")
-                .host("tncorp.smilecon.co.kr");
+                .host(HOST);
     }
 
 }

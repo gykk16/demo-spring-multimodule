@@ -1,5 +1,4 @@
 = Dev Notes
-
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -10,4 +9,5 @@
 :experimental: true
 
 include::soft-delete.adoc[]
+include::rest-docs.adoc[]
 
