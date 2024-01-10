@@ -1,4 +1,4 @@
-package io.glory.pips.app.api.model;
+package io.glory.pips.app.api.model.response;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -11,6 +11,15 @@ import io.glory.pips.domain.query.PrivacyInfoAllDto;
 
 /**
  * 개인정보 조회 V1 응답 Spec
+ * <pre>
+ * {
+ *   "id": 1,
+ *   "dataUuid": "c0a8d3e0-9b9e-4e1a-9e1a-9e1a9e1a9e1a",
+ *   "personalData": { ... },
+ *   "bankAccount": { ... },
+ *   "createdAt": "2021-01-01T00:00:00.000"
+ * }
+ * </pre>
  *
  * @param id           개인정보 id
  * @param dataUuid     개인정보 고유 uuid

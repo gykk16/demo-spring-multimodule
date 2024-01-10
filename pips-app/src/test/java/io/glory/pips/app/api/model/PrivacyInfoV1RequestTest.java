@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
+import io.glory.pips.app.api.model.request.PrivacyInfoV1Request;
 import io.glory.pips.app.service.model.PrivacyInfoServiceRequest;
 import io.glory.pips.data.constants.bank.BankCode;
 import org.junit.jupiter.api.DisplayName;

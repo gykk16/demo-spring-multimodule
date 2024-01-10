@@ -1,4 +1,4 @@
-package io.glory.pips.app.api.model;
+package io.glory.pips.app.api.model.request;
 
 import java.time.LocalDate;
 

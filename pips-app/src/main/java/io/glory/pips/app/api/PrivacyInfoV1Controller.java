@@ -1,5 +1,8 @@
 package io.glory.pips.app.api;
 
+import static io.glory.mcore.code.SuccessCode.CREATED;
+import static io.glory.mcore.code.SuccessCode.SUCCESS;
+
 import java.util.List;
 
 import jakarta.validation.constraints.Size;
@@ -8,9 +11,8 @@ import lombok.RequiredArgsConstructor;
 
 import io.glory.coreweb.response.ApiResponseEntity;
 import io.glory.coreweb.response.CollectionResObj;
-import io.glory.mcore.code.SuccessCode;
-import io.glory.pips.app.api.model.PrivacyInfoV1Request;
-import io.glory.pips.app.api.model.PrivacyInfoV1Response;
+import io.glory.pips.app.api.model.request.PrivacyInfoV1Request;
+import io.glory.pips.app.api.model.response.PrivacyInfoV1Response;
 import io.glory.pips.app.service.PrivacyInfoService;
 import io.glory.pips.domain.query.PrivacyInfoAllDto;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +40,7 @@ public class PrivacyInfoV1Controller {
     public ResponseEntity<ApiResponseEntity<PrivacyInfoV1Response>> fetchPrivacyInfo(@PathVariable Long id) {
 
         PrivacyInfoAllDto privacyInfoAllDto = privacyInfoService.fetchPrivacyInfo(id);
-        return ApiResponseEntity.of(SuccessCode.SUCCESS, PrivacyInfoV1Response.of(privacyInfoAllDto));
+        return ApiResponseEntity.of(SUCCESS, PrivacyInfoV1Response.of(privacyInfoAllDto));
     }
 
     /**
@@ -55,7 +57,7 @@ public class PrivacyInfoV1Controller {
                 .map(PrivacyInfoV1Response::of)
                 .toList();
         var collectionResObj = new CollectionResObj<>(responseList);
-        return ApiResponseEntity.of(SuccessCode.SUCCESS, collectionResObj);
+        return ApiResponseEntity.of(SUCCESS, collectionResObj);
     }
 
     /**
@@ -68,7 +70,7 @@ public class PrivacyInfoV1Controller {
             @RequestBody PrivacyInfoV1Request request) {
 
         Long privacyInfoId = privacyInfoService.savePrivacyInfo(request.toServiceRequest());
-        return ApiResponseEntity.of(SuccessCode.CREATED, privacyInfoId);
+        return ApiResponseEntity.of(CREATED, privacyInfoId);
     }
 
     /**
@@ -82,7 +84,7 @@ public class PrivacyInfoV1Controller {
             @PathVariable Long id, @RequestBody PrivacyInfoV1Request request) {
 
         Long privacyInfoId = privacyInfoService.updatePrivacyInfo(id, request.toServiceRequest());
-        return ApiResponseEntity.of(SuccessCode.SUCCESS, privacyInfoId);
+        return ApiResponseEntity.of(SUCCESS, privacyInfoId);
     }
 
     /**
@@ -94,7 +96,7 @@ public class PrivacyInfoV1Controller {
     public ResponseEntity<ApiResponseEntity<Long>> deletePrivacyInfo(@PathVariable Long id) {
 
         Long privacyInfoId = privacyInfoService.deletePrivacyInfo(id);
-        return ApiResponseEntity.of(SuccessCode.SUCCESS, privacyInfoId);
+        return ApiResponseEntity.of(SUCCESS, privacyInfoId);
     }
 
 }

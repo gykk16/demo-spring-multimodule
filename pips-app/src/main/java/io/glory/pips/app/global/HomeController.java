@@ -10,13 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/pips")
 public class HomeController {
 
+    @Value("${info.app.name:}")
+    private String appName;
     @Value("${info.app.version:}")
     private String appVersion;
 
     @GetMapping
     @SecuredIp
     public String home() {
-        return "Privacy information processing system App, Version: " + appVersion;
+        return appName + " , Version: " + appVersion;
     }
 
 }

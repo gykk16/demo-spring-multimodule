@@ -6,6 +6,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import io.glory.pips.app.api.model.response.BankAccountV1Response;
+import io.glory.pips.app.api.model.response.PersonalDataV1Response;
+import io.glory.pips.app.api.model.response.PrivacyInfoV1Response;
 import io.glory.pips.data.constants.bank.BankCode;
 import io.glory.pips.domain.query.PrivacyInfoAllDto;
 import org.junit.jupiter.api.DisplayName;
