@@ -12,7 +12,6 @@ spring:
           mutation_strategy: org.hibernate.query.sqm.mutation.internal.inline.InlineMutationStrategy
     open-in-view: false
 
-
 ---
 # =====================================================================================================================
 # local
@@ -27,40 +26,23 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
-    #    url: jdbc:oracle:thin:@localhost:1521:XE
-    #    username: smilecon
-    #    password: 1234
-    #    driver-class-name: oracle.jdbc.OracleDriver
     hikari:
-      pool-name: smilecon-local-DS
+      pool-name: pips-local-DS
       connection-timeout: 10000
       idle-timeout: 300000
       max-lifetime: 300000
       minimum-idle: 2
-      maximum-pool-size: 3
+      maximum-pool-size: 10
   # ==============================
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
     properties:
       hibernate:
+#        format_sql: true
     generate-ddl: true
-
-# =====================================================================================================================
-# logging
-# =====================================================================================================================
-logging:
-  group:
-    app: "io.glory"
-    hikari: "com.zaxxer.hikari"
-    transaction: "org.springframework.transaction, org.springframework.orm.jpa.JpaTransactionManager, org.hibernate.engine.transaction.internal.TransactionImpl"
-    query: "org.hibernate.SQL, org.hibernate.SQL_SLOW"
-    bind: "org.hibernate.orm.jdbc.bind"
-  level:
-    app: debug
-    sql: debug
-    query: debug
-    bind: trace
+    show-sql: true
+    open-in-view: false
 
 ---
 

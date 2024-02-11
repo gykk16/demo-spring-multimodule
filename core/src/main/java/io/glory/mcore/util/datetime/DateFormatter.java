@@ -15,6 +15,50 @@ public class DateFormatter {
     }
 
     /**
+     * 전달된 문자열을 LocalDate 로 반환
+     *
+     * @param date 날짜
+     * @return LocalDate
+     */
+    public static LocalDate formatDateStr(String date) {
+        return formatDateStr(date, DATE_FORMAT);
+    }
+
+    /**
+     * 전달된 문자열을 LocalDate 로 반환
+     *
+     * @param date   날짜
+     * @param format 형식
+     * @return LocalDate
+     */
+    public static LocalDate formatDateStr(String date, String format) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        return LocalDate.parse(date, formatter);
+    }
+
+    /**
+     * 전달된 문자열을 LocalDateTime 로 반환
+     *
+     * @param datetime 일시
+     * @return LocalDateTime
+     */
+    public static LocalDateTime formatDateTimeStr(String datetime) {
+        return formatDateTimeStr(datetime, DATE_TIME_FORMAT);
+    }
+
+    /**
+     * 전달된 문자열을 LocalDateTime 로 반환
+     *
+     * @param datetime 일시
+     * @param format   형식
+     * @return LocalDateTime
+     */
+    public static LocalDateTime formatDateTimeStr(String datetime, String format) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        return LocalDateTime.parse(datetime, formatter);
+    }
+
+    /**
      * 전달된 날짜를 yyyy-MM-dd 형식으로 반환
      * <p>
      * date 가 null 인 경우 "" 를 반환

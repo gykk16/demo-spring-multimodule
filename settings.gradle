@@ -13,6 +13,7 @@ include 'pips-domain'
 /* Application */
 include 'pips-app'
 include 'pips-app-service'
+include 'pips-app-batch'
 
 /* 보안 */
 //include 'secure-app-service'
@@ -27,5 +28,4 @@ include 'clients'
 
 /* 테스트 지원 */
 include 'pips-test-support'
-
 

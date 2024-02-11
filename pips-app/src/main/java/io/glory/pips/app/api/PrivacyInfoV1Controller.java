@@ -15,6 +15,7 @@ import io.glory.pips.app.api.model.request.PrivacyInfoV1Request;
 import io.glory.pips.app.api.model.response.PrivacyInfoV1Response;
 import io.glory.pips.app.service.PrivacyInfoService;
 import io.glory.pips.domain.query.PrivacyInfoAllDto;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

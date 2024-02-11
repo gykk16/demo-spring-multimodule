@@ -96,6 +96,13 @@ project(':pips-app-service') {
     }
 }
 
+project(':pips-app-batch') {
+    dependencies {
+        implementation project(':core-web')
+        implementation project(':pips-domain')
+    }
+}
+
 project(':pips-domain') {
     dependencies {
         api project(':pips-data')
