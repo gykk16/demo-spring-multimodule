@@ -1,6 +1,5 @@
 package io.glory.pips.app.system.config;
 
-
 import static io.glory.coreweb.WebAppConst.INTERCEPTOR_EXCLUDE_PATH;
 import static io.glory.coreweb.WebAppConst.getMdcAccessId;
 
@@ -27,40 +26,29 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
+    private final DocsSecureInterceptor      docsSecureInterceptor;
+    private final LogInterceptor             logInterceptor;
+    private final LogResponseBodyInterceptor logResponseBodyInterceptor;
+
     @Value("${info.app.alias:}")
     private String appAlias;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
-        registry.addInterceptor(docsSecureInterceptor())
+        registry.addInterceptor(docsSecureInterceptor)
                 .order(1)
                 .addPathPatterns("/docs/**");
 
-        registry.addInterceptor(logInterceptor())
+        registry.addInterceptor(logInterceptor)
                 .order(2)
                 .addPathPatterns("/**")
                 .excludePathPatterns(INTERCEPTOR_EXCLUDE_PATH);
 
-        registry.addInterceptor(logResponseBodyInterceptor())
+        registry.addInterceptor(logResponseBodyInterceptor)
                 .order(3)
                 .addPathPatterns("/**")
                 .excludePathPatterns(INTERCEPTOR_EXCLUDE_PATH);
-    }
-
-    @Bean
-    public LogInterceptor logInterceptor() {
-        return new LogInterceptor();
-    }
-
-    @Bean
-    public LogResponseBodyInterceptor logResponseBodyInterceptor() {
-        return new LogResponseBodyInterceptor();
-    }
-
-    @Bean
-    public DocsSecureInterceptor docsSecureInterceptor() {
-        return new DocsSecureInterceptor();
     }
 
     @Bean
