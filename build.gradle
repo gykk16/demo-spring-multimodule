@@ -2,7 +2,7 @@ import java.nio.charset.StandardCharsets
 
 buildscript {
     ext {
-        springBootVersion = '3.2.1'
+        springBootVersion = '3.2.2'
     }
     repositories {
         mavenCentral()
