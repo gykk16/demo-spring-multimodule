@@ -8,10 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import feign.FeignException;
 import feign.RetryableException;
-import kr.co.smilecon.mcore.code.ExternalErrorCode;
-import kr.co.smilecon.mcore.exception.BizException;
-import kr.co.smilecon.mcore.exception.BizRuntimeException;
-import kr.co.smilecon.module.http.ExternalHttpException;
+import io.glory.mcore.code.ExternalErrorCode;
+import io.glory.mcore.exceptions.BizException;
+import io.glory.mcore.exceptions.BizRuntimeException;
+import io.glory.module.http.ExternalHttpException;
 
 @Slf4j
 public class OpenFeignHelper {
