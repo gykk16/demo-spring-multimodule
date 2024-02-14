@@ -31,7 +31,7 @@ import reactor.netty.transport.logging.AdvancedByteBufFormat;
 @Slf4j
 public class WebClientConfig {
 
-    private static final String USER_AGENT = "Sc/http-client-w";
+    private static final String USER_AGENT = "http-client-w";
 
     ExchangeFilterFunction mdcFilter = (clientRequest, nextFilter) -> {
         String requestTraceKey = Optional.ofNullable(MDC.get(REQUEST_TRACE_KEY)).orElse("");
