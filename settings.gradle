@@ -1,5 +1,8 @@
 rootProject.name = 'pips'
 
+/* 문서 모듈 */
+include '_docs'
+
 /* 코어 모듈 */
 include 'core'
 

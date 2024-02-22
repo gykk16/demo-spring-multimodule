@@ -83,6 +83,16 @@ subprojects {
 
 }
 
+project(':_docs') {
+    dependencies {
+        testImplementation project(':pips-app')
+        testImplementation project(':pips-app-service')
+        testImplementation project(':pips-domain')
+        testImplementation project(':pips-data')
+        testImplementation project(':core-web')
+    }
+}
+
 project(':pips-app') {
     dependencies {
         implementation project(':pips-app-service')
@@ -109,8 +119,8 @@ project(':pips-domain') {
     }
 }
 
-// 모든 모듈에 core 모듈 추가
-configure(subprojects.findAll() { it.name != 'core' }) {
+// 모든 모듈에 core 및 테스트 모듈 추가
+configure(subprojects.findAll() { (it.name != 'core' && it.name != 'pips-test-support') }) {
     dependencies {
         implementation project(':core')
         testImplementation(testFixtures(project(':pips-test-support')))

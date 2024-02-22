@@ -6,6 +6,8 @@ spring:
           default:
             connectTimeout: 3000
             readTimeout: 5000
-            loggerLevel: basic
+            loggerLevel: headers
             default-request-headers:
               User-Agent: http-client-of
+              Content-Type: application/json
+              Accept: application/json

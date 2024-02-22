@@ -1,0 +1,17 @@
+[[server-list]]
+== API Server List
+
+.API Server List
+|===
+| Phase | Host | Description | IP
+
+| `DEVELOP (TEST)`
+| https://www.example.com
+| 테스트 서버
+| 100.100.100.1
+
+| `PRODUCTION (REAL)`
+|별도 제공
+| 운영 서버 (상용)
+|별도 제공
+|===

@@ -1,0 +1,36 @@
+ifndef::snippets[]
+:snippets: ../../build/generated-snippets
+endif::[]
+= Smilecon API 문서
+:stylesdir: {docdir}/../../../css
+:stylesheet: stylesheet.css
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:table-stripes: hover
+:sectanchors:
+
+[[overview]]
+= Overview
+
+.본 문서는 스마일콘 API 연동 가이드를 제공합니다.
+[[api-guide]]
+[NOTE]
+--
+--
+
+include::{docdir}/template/temp-server-list.adoc[]
+include::{docdir}/template/temp-http-verbs.adoc[]
+include::{docdir}/template/temp-req-res-format.adoc[]
+include::{docdir}/template/temp-page-format.adoc[]
+include::{docdir}/template/temp-common-response-codes.adoc[]
+
+[[api-list]]
+= API List
+
+== Pips V1 APIs
+
+
+
